@@ -7,8 +7,8 @@
 Create a react web app using the user stories below!
 Push your code to github and also deploy your app using your preferred platform.
 
-Use the https://pokeapi.co/
-Use chakra-ui for your component library https://chakra-ui.com/
+Use the <https://pokeapi.co/>
+Use chakra-ui for your component library <https://chakra-ui.com/>
 
 ### Pokemon Web App User Stories
 
