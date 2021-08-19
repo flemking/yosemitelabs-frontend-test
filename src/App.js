@@ -18,18 +18,20 @@ import YourPokemon from './components/YourPokemon';
 // import { ColorModeSwitcher } from './ColorModeSwitcher';
 
 function App() {
+  //  ---------------getting a randomID for a Pokemon---------------
   const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
   const getRandomPok = random(1, 898);
+  //  -----------------------------------------------------------
   const [input, setInput] = useState(getRandomPok);
-  const [pokName, setPokName] = useState(
-    <Spinner color="purple.500" size="xl" />
-  );
+  //  ---------------variables to save each data-----------------------
+  const [pokName, setPokName] = useState('');
   const [pokPicture, setPokPicture] = useState('');
   const [exp, setExp] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [abilities, setAbilities] = useState('');
   const [id, setId] = useState('');
+  //  -------------------------------------------------------
   // const [url, setUrl] = useState(`https://pokeapi.co/api/v2/pokemon/${input}/`);
 
   let url = `https://pokeapi.co/api/v2/pokemon/${input}/`;
@@ -40,6 +42,7 @@ function App() {
       .then(response => response.json())
       .then(data => {
         // console.log(data);
+        //  ---------------saving each data-----------------------
         setPokName(data.name);
         setPokPicture(data.sprites.other.dream_world.front_default);
         setExp(data.base_experience);
@@ -53,7 +56,7 @@ function App() {
         alert("Pokemon don't find : Retry or Reload");
       });
   }
-
+  //  ---------------updating the component-----------------------
   useEffect(() => {
     getPokemon();
   }, [input, url]);
@@ -65,7 +68,7 @@ function App() {
     // console.log(receivedPokemon);
     setInput(`${receivedPokemon}`);
   }
-  // i was trying to tell to the user that is the loading stuck to reload
+  // i was trying to tell the user with a toast that is the loading stuck to reload
   // const toast = useToast();
 
   return (
@@ -73,6 +76,7 @@ function App() {
       <Box textAlign="center" fontSize="xl" minH="100vh">
         <Center spacing="24px" minH="100vh">
           <Box minH="100vh" maxW="3000px">
+            {/* The logo */}
             <Image
               src="https://fontmeme.com/permalink/210819/969ada64e5293a83d95837ab4c3609af.png"
               boxSize="100%"
@@ -81,6 +85,8 @@ function App() {
               pt={4}
               alt="Pokemon App Logo"
             />
+
+            {/* Render the Pokemoncard */}
             {pokPicture ? (
               <GetPokemonCard
                 pokName={pokName}
@@ -103,7 +109,7 @@ function App() {
                 })} */}
               </Box>
             )}
-
+            {/* render the buttons */}
             <VStack spacing={5} alignSelf="end" py={14}>
               <form onSubmit={handleSubmit}>
                 <HStack spacing={4}>

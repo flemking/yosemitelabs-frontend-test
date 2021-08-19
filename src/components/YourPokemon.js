@@ -16,6 +16,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 // import { teamId } from './GetPokemonCard';
 
 const YourPokemon = ({ setInput }) => {
+  //  ---------------getting the team saved in the localStorage-----------------------
   let team = JSON.parse(localStorage.getItem('team')) || [];
   let teamId = JSON.parse(localStorage.getItem('teamId')) || [];
   const toast = useToast();
@@ -26,6 +27,7 @@ const YourPokemon = ({ setInput }) => {
           Your Pokemon Team
         </MenuButton>
         <MenuList>
+          {/* ---------------render each saved pokemon----------------------- */}
           {team.map(el => {
             let index = team.indexOf(el);
             return (
@@ -57,6 +59,7 @@ const YourPokemon = ({ setInput }) => {
                   >
                     {el}
                   </Text>
+                  {/* ---------------Allow the user to remove a poke in the menu---------- */}
                   <Badge
                     colorScheme="red"
                     onClick={() => {
@@ -66,6 +69,7 @@ const YourPokemon = ({ setInput }) => {
                       );
                       localStorage.setItem('team', JSON.stringify(team));
                       localStorage.setItem('teamId', JSON.stringify(teamId));
+                      //  ---------------let the user know that the poke is removed-----------------------
                       toast({
                         title: 'Pokemon removed successfully',
                         description: `You've removed ${el}`,
