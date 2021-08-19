@@ -7,12 +7,15 @@ import {
   Input,
   Button,
   Center,
-  Heading,
   HStack,
   VStack,
   Spinner,
+  Image,
+  // useToast,
 } from '@chakra-ui/react';
 import GetPokemonCard from './components/GetPokemonCard';
+import YourPokemon from './components/YourPokemon';
+// import { ColorModeSwitcher } from './ColorModeSwitcher';
 
 function App() {
   const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
@@ -21,11 +24,13 @@ function App() {
   const [pokName, setPokName] = useState(
     <Spinner color="purple.500" size="xl" />
   );
-  const [pokPicture, setPokPicture] = useState(<Spinner color="red.500" />);
+  const [pokPicture, setPokPicture] = useState('');
   const [exp, setExp] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [abilities, setAbilities] = useState('');
+  const [id, setId] = useState('');
+  // const [url, setUrl] = useState(`https://pokeapi.co/api/v2/pokemon/${input}/`);
 
   let url = `https://pokeapi.co/api/v2/pokemon/${input}/`;
 
@@ -34,19 +39,24 @@ function App() {
     await fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+        // console.log(data);
         setPokName(data.name);
         setPokPicture(data.sprites.other.dream_world.front_default);
         setExp(data.base_experience);
         setHeight(data.height);
         setWeight(data.weight);
         setAbilities(Object.keys(data.abilities).length);
+        setId(data.id);
+      })
+      .catch(error => {
+        console.log(error);
+        alert("Pokemon don't find : Retry or Reload");
       });
   }
 
   useEffect(() => {
     getPokemon();
-  }, [input]);
+  }, [input, url]);
 
   //handleSubmit function
   function handleSubmit(e) {
@@ -55,24 +65,44 @@ function App() {
     // console.log(receivedPokemon);
     setInput(`${receivedPokemon}`);
   }
+  // i was trying to tell to the user that is the loading stuck to reload
+  // const toast = useToast();
 
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl" minH="100vh">
         <Center spacing="24px" minH="100vh">
           <Box minH="100vh" maxW="3000px">
-            <Heading as="h1" size="2xl" color="purple.600" pt={4}>
-              Pokemon App
-            </Heading>
-
-            <GetPokemonCard
-              pokName={pokName}
-              pokPicture={pokPicture}
-              exp={exp}
-              height={height}
-              weight={weight}
-              abilities={abilities}
+            <Image
+              src="https://fontmeme.com/permalink/210819/969ada64e5293a83d95837ab4c3609af.png"
+              boxSize="100%"
+              maxH="10vh"
+              objectFit="contain"
+              pt={4}
+              alt="Pokemon App Logo"
             />
+            {pokPicture ? (
+              <GetPokemonCard
+                pokName={pokName}
+                pokPicture={pokPicture}
+                exp={exp}
+                height={height}
+                weight={weight}
+                abilities={abilities}
+                id={id}
+              />
+            ) : (
+              <Box w="50vh" p="200px">
+                <Spinner color="red.500" size="xl" minH="80%" />
+                {/* {toast({
+                  title: 'If loading too long',
+                  description: `Please reload the page to fecth new data`,
+                  status: 'info',
+                  duration: 1000,
+                  isClosable: true,
+                })} */}
+              </Box>
+            )}
 
             <VStack spacing={5} alignSelf="end" py={14}>
               <form onSubmit={handleSubmit}>
@@ -81,24 +111,31 @@ function App() {
                     variant="filled"
                     placeholder="Search by name"
                     name="pokemon"
+                    autoComplete="false"
+                    autoFocus="true"
+                    focusBorderColor="purple.400"
                   />
                   <Button colorScheme="purple" variant="outline" type="submit">
                     Search
                   </Button>
                 </HStack>
               </form>
-              <Button
-                colorScheme="purple"
-                onClick={() => {
-                  setInput(`${getRandomPok}`);
-                }}
-              >
-                Random Pokemon
-              </Button>
+              <HStack>
+                <Button
+                  colorScheme="purple"
+                  onClick={() => {
+                    setInput(`${getRandomPok}`);
+                  }}
+                >
+                  Random Pokemon
+                </Button>
+                <YourPokemon setInput={setInput} />
+              </HStack>
             </VStack>
           </Box>
         </Center>
       </Box>
+      {/* <ColorModeSwitcher /> */}
     </ChakraProvider>
   );
 }
