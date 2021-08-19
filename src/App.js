@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import {
   ChakraProvider,
   Box,
-  Grid,
   theme,
   Input,
   Button,
@@ -23,6 +22,10 @@ function App() {
     <Spinner color="purple.500" size="xl" />
   );
   const [pokPicture, setPokPicture] = useState(<Spinner color="red.500" />);
+  const [exp, setExp] = useState('');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [abilities, setAbilities] = useState('');
 
   let url = `https://pokeapi.co/api/v2/pokemon/${input}/`;
 
@@ -34,6 +37,10 @@ function App() {
         console.log(data);
         setPokName(data.name);
         setPokPicture(data.sprites.other.dream_world.front_default);
+        setExp(data.base_experience);
+        setHeight(data.height);
+        setWeight(data.weight);
+        setAbilities(Object.keys(data.abilities).length);
       });
   }
 
@@ -44,21 +51,28 @@ function App() {
   //handleSubmit function
   function handleSubmit(e) {
     e.preventDefault();
-    const receivedPokemon = e.target.pokemon.value;
-    console.log(receivedPokemon);
+    const receivedPokemon = e.target.pokemon.value.toLowerCase();
+    // console.log(receivedPokemon);
     setInput(`${receivedPokemon}`);
   }
 
   return (
     <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Center spacing="24px">
-          <Grid minH="100vh" maxW="3000px">
-            <Heading as="h1" size="2xl" color="purple.600" pt="14">
+      <Box textAlign="center" fontSize="xl" minH="100vh">
+        <Center spacing="24px" minH="100vh">
+          <Box minH="100vh" maxW="3000px">
+            <Heading as="h1" size="2xl" color="purple.600" pt={4}>
               Pokemon App
             </Heading>
 
-            <GetPokemonCard pokName={pokName} pokPicture={pokPicture} />
+            <GetPokemonCard
+              pokName={pokName}
+              pokPicture={pokPicture}
+              exp={exp}
+              height={height}
+              weight={weight}
+              abilities={abilities}
+            />
 
             <VStack spacing={5} alignSelf="end" py={14}>
               <form onSubmit={handleSubmit}>
@@ -82,7 +96,7 @@ function App() {
                 Random Pokemon
               </Button>
             </VStack>
-          </Grid>
+          </Box>
         </Center>
       </Box>
     </ChakraProvider>
